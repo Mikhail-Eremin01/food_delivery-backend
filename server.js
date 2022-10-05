@@ -1,21 +1,36 @@
-const express = require('express');
-const getData = require('./getData');
-const getStartingInfo = require('./endpoints/getStartingInfo');
-const getAllRestaurantsDishes = require('./endpoints/getAllRestaurantsDishes');
+const express = require("express");
+// const getData = require('./getData');
+const cors = require("cors");
+const cookieParser = require("cookie-parser");
+const getAllRestaurants = require("./endpoints/getAllRestaurants");
+const getAllRestaurantsDishes = require("./endpoints/getAllRestaurantsDishes");
+const mongoose = require("mongoose");
+require("dotenv").config();
+const router = require("./router/index");
+const nodemailer = require("nodemailer");
+const { google } = require("googleapis");
+const PORT = process.env.PORT || 3001;
 const app = express();
-const mongoose = require('mongoose');
-require('dotenv').config();
+const errorMiddleware = require("./middlewares/error-middleware");
 
-const db = `mongodb+srv://Michael:${process.env.MONGODB_PASS}@cluster0.mpenlh3.mongodb.net/food_delivery?retryWrites=true&w=majority`;
+app.use(express.json());
+app.use(cookieParser());
+app.use(cors());
+app.use("/api", router);
+app.use(errorMiddleware);
+const start = async () => {
+    try {
+        //  connect to MongoDB
+        await mongoose
+            .connect(process.env.DB_URL)
+            .then((res) => console.log("Connect to DB"));
+        //  connect to server
+        app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+    } catch (error) {
+        console.log(error);
+    }
+};
+start();
 
-mongoose
-.connect(db)
-.then((res) => console.log('Connect to DB'))
-.catch((err) => console.log(err));
-
-app.listen(process.env.PORT || 3001, ()=> {
-    console.log(`Server is started on port ${process.env.PORT}`);
-})
-
-app.get('/mainData', getStartingInfo);
-app.get('/getAllRestaurantsDishes', getAllRestaurantsDishes);
+app.get("/mainData", getAllRestaurants);
+app.get("/getAllRestaurantsDishes", getAllRestaurantsDishes);
