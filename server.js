@@ -15,16 +15,12 @@ const errorMiddleware = require("./middlewares/error-middleware");
 
 app.use(express.json());
 app.use(cookieParser());
-<<<<<<< HEAD
 app.use(
     cors({
         credentials: true,
         origin: process.env.CLIENT_URL,
     })
 );
-=======
-app.use(cors());
->>>>>>> 7c6cd7cac31d1edac4d2e110725559e9c6b18262
 app.use("/api", router);
 app.use(errorMiddleware);
 const start = async () => {
