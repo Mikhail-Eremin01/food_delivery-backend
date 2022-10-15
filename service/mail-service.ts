@@ -1,9 +1,9 @@
-const nodemailer = require("nodemailer");
-const { google } = require("googleapis");
+import nodemailer from "nodemailer";
+import { google } from "googleapis";
 require("dotenv").config();
 
 class MailService {
-    async sendActivationMail(to, link) {
+    async sendActivationMail(to:string, link:string) {
         try {
             const oAuth2Client = new google.auth.OAuth2(
                 process.env.CLIENT_ID,
@@ -38,10 +38,10 @@ class MailService {
                        </div>`,
             });
             console.log("Email sent...", result);
-        } catch (err) {
+        } catch (err:any) {
             console.log(err.message);
         }
     }
 }
 
-module.exports = new MailService();
+export default new MailService();

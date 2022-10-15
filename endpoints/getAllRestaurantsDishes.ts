@@ -1,6 +1,6 @@
-const getAllDishes = require('../middlewares/getAllDishes');
+import getAllDishes from '../middlewares/getAllDishes';
 
-const getAllRestaurantsDishes = async (request, response) => {
+const getAllRestaurantsDishes = async (request:any, response:any) => {
     try{
         const allDishes = await getAllDishes(request.query.id);
         response.end(JSON.stringify(allDishes));
@@ -8,4 +8,4 @@ const getAllRestaurantsDishes = async (request, response) => {
         console.log(error);
     }
 }
-module.exports = getAllRestaurantsDishes
+export default getAllRestaurantsDishes

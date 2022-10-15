@@ -1,22 +1,19 @@
-const mongoose = require("mongoose");
-const Dish = require("./models/dish");
-const Restaurant = require("./models/restaurant");
-const User = require("./models/user");
-const { ObjectId } = require("mongodb");
-const getRestaurantsInfo = require("./middlewares/getRestaurantsInfo");
-const getAllDishes = require("./middlewares/getAllDishes");
-const fs = require("fs");
-const path = require("path");
+import mongoose from "mongoose";
+import Dish from "./models/dish";
+import Restaurant from "./models/restaurant";
+import getRestaurantsInfo from "./middlewares/getRestaurantsInfo";
+import getAllDishes from "./middlewares/getAllDishes";
+import fs from "fs";
+import path from "path";
 
-const db =
-    "mongodb+srv://Michael:mixanya19972505@cluster0.mpenlh3.mongodb.net/food_delivery?retryWrites=true&w=majority";
+const db = process.env.DB_URL;
 
 // mongoose
 // .connect(db)
 // .then((res) => console.log('Connect to DB'))
 // .catch((err) => console.log(err));
 
-const getData = async function (request, response, next) {
+const getData = async function (request:any, response:any, next:any) {
     const allMenu = [];
 
     //  Add main info about all restaurants
@@ -48,15 +45,15 @@ const getData = async function (request, response, next) {
     console.log(kfc2);
     // response.end(JSON.stringify([kfc2]));
 
-    new Promise((resolve, reject) => {
-        return fs.readFile(
-            path.join(require.main.path, "restaurants.json"),
-            (err, data) => {
-                if (err) reject(err);
-                resolve(data);
-            }
-        );
-    }).then((data) => response.end(data));
+    // new Promise((resolve, reject) => {
+    //     return fs.readFile(
+    //         path.join(require.main.path, "restaurants.json"),
+    //         (err, data) => {
+    //             if (err) reject(err);
+    //             resolve(data);
+    //         }
+    //     );
+    // }).then((data) => response.end(data));
 
     // allMenu[1].menu = sharkys1;
     // allMenu[2].menu = mcDonalds1;
@@ -72,4 +69,4 @@ const getData = async function (request, response, next) {
     // Dish.find({restaurantsId: "62fbb6db1b9335dbc2923bfd"})
     // .then((res) => menu_kfc.push(...res));
 };
-module.exports = getData;
+export default getData;

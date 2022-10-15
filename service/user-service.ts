@@ -1,13 +1,13 @@
-const UserModel = require("../models/user");
-const bcrypt = require("bcrypt");
-const uuid = require("uuid");
-const mailService = require("./mail-service");
-const tokenService = require("./token-service");
-const UserDto = require("../dtos/user-dto");
-const ApiError = require("../exceptions/api-error");
+import UserModel from "../models/user";
+import bcrypt from "bcrypt";
+import uuid from "uuid";
+import mailService from "./mail-service";
+import tokenService from "./token-service";
+import UserDto from "../dtos/user-dto";
+import ApiError from "../exceptions/api-error";
 
 class UserService {
-    async registration(email, password) {
+    async registration(email:string, password:string) {
         const candidate = await UserModel.findOne({ email });
         if (candidate) {
             throw ApiError.BadRequest(
@@ -33,7 +33,7 @@ class UserService {
         return { ...tokens, user: userDto };
     }
 
-    async activate(activationLink) {
+    async activate(activationLink:string) {
         const user = await UserModel.findOne({ activationLink });
         if (!user) {
             throw ApiError.BadRequest("Invalid activation link");
@@ -42,7 +42,7 @@ class UserService {
         await user.save();
     }
 
-    async login(email, password) {
+    async login(email:string, password:string) {
         const user = await UserModel.findOne({ email });
         if (!user) {
             throw ApiError.BadRequest("User with this email was not found");
@@ -59,12 +59,12 @@ class UserService {
         return { ...tokens, user: userDto };
     }
 
-    async logout(refreshToken) {
+    async logout(refreshToken:string) {
         const token = await tokenService.removeToken(refreshToken);
         return token;
     }
 
-    async refresh(refreshToken) {
+    async refresh(refreshToken:string) {
         if (!refreshToken) {
             throw ApiError.UnauthorizedError();
         }
@@ -88,4 +88,4 @@ class UserService {
     }
 }
 
-module.exports = new UserService();
+export default new UserService();

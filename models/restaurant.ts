@@ -1,5 +1,5 @@
-const { ObjectId } = require("mongodb");
-const { Schema, model } = require("mongoose");
+import { ObjectId } from "mongodb";
+import { Schema, model } from "mongoose";
 
 const RestaurantSchema = new Schema(
     {
@@ -28,4 +28,4 @@ const RestaurantSchema = new Schema(
 
 const Restaurant = model("restaurant", RestaurantSchema);
 
-module.exports = Restaurant;
+export default Restaurant;

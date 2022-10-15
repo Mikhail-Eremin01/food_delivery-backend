@@ -1,7 +1,12 @@
-const ApiError = require("../exceptions/api-error");
-const tokenService = require("../service/token-service");
+import ApiError from "../exceptions/api-error";
+import tokenService from "../service/token-service.ts";
+import express from 'express';
+interface IUser {
+    email: string,
+    password: string
+}
 
-module.exports = function (req, res, next) {
+export default function (req: any, res: express.Response, next: express.NextFunction) {
     try {
         const authorizationHeader = req.headers.authorization;
         if (!authorizationHeader) {
@@ -21,3 +26,4 @@ module.exports = function (req, res, next) {
         return next(ApiError.UnauthorizedError());
     }
 };
+

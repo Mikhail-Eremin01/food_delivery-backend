@@ -1,8 +1,9 @@
-module.exports = class UserDto {
-    user;
+export default class UserDto {
+    user: any;
     id;
     isActivated;
-    constructor(model) {
+    email: any;
+    constructor(model:any) {
         this.email = model.email;
         this.id = model._id;
         this.isActivated = model.isActivated;

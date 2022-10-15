@@ -1,6 +1,5 @@
-const { ObjectId } = require("mongodb");
-const mongoose = require("mongoose");
-const { Schema, model } = require("mongoose");
+import { ObjectId } from "mongodb";
+import { Schema, model } from "mongoose";
 
 const DishSchema = new Schema(
     {
@@ -34,4 +33,4 @@ const DishSchema = new Schema(
 
 const Dish = model("dish", DishSchema);
 
-module.exports = Dish;
+export default Dish;
