@@ -1,6 +1,6 @@
 import UserModel from "../models/user";
 import bcrypt from "bcrypt";
-import uuid from "uuid";
+import {v4} from 'uuid';
 import mailService from "./mail-service";
 import tokenService from "./token-service";
 import UserDto from "../dtos/user-dto";
@@ -15,7 +15,7 @@ class UserService {
             );
         }
         const hashPassword = await bcrypt.hash(password, 3);
-        const activationLink = uuid.v4();
+        const activationLink = v4();
         const user = await UserModel.create({
             email,
             password: hashPassword,
@@ -68,11 +68,12 @@ class UserService {
         if (!refreshToken) {
             throw ApiError.UnauthorizedError();
         }
-        const userData = tokenService.validateRefreshToken(refreshToken);
+        const userData:any = tokenService.validateRefreshToken(refreshToken);
         const tokenFromDb = await tokenService.findToken(refreshToken);
         if (!userData || !tokenFromDb) {
             throw ApiError.UnauthorizedError();
         }
+        
         const user = await UserModel.findById(userData.id);
         const userDto = new UserDto(user);
         const tokens = tokenService.generateTokens({ ...userDto });
@@ -80,11 +81,6 @@ class UserService {
         await tokenService.saveToken(userDto.id, tokens.refreshToken);
 
         return { ...tokens, user: userDto };
-    }
-
-    async getAllUsers() {
-        const users = await UserModel.find();
-        return users;
     }
 }
 

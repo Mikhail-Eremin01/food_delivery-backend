@@ -1,4 +1,4 @@
-import nodemailer from "nodemailer";
+import nodemailer from 'nodemailer';
 import { google } from "googleapis";
 require("dotenv").config();
 
@@ -13,17 +13,15 @@ class MailService {
             oAuth2Client.setCredentials({
                 refresh_token: process.env.REFRESH_TOKEN,
             });
-
-            const accessToken = await oAuth2Client.getAccessToken();
+            
             const transport = nodemailer.createTransport({
-                service: "gmail",
+                service: "Gmail",
                 auth: {
                     type: "OAuth2",
                     user: process.env.SMTP_USER,
                     clientId: process.env.CLIENT_ID,
                     clientSecret: process.env.CLIENT_SECRET,
-                    refreshToken: process.env.REFRESH_TOKEN,
-                    accessToken: accessToken,
+                    refreshToken: process.env.REFRESH_TOKEN
                 },
             });
 
@@ -38,8 +36,8 @@ class MailService {
                        </div>`,
             });
             console.log("Email sent...", result);
-        } catch (err:any) {
-            console.log(err.message);
+        } catch (err) {
+            console.log((err as Error).message);
         }
     }
 }

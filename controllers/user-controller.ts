@@ -1,9 +1,17 @@
 import userService from "../service/user-service";
 import { validationResult } from "express-validator";
 import ApiError from "../exceptions/api-error";
+import { Request, Response, NextFunction } from 'express'
+
+interface TypedRequestBody extends Express.Request {
+    body: {
+        email: string,
+        password:string
+    }
+}
 
 class UserController {
-    async registration(req:any, res:any, next:any) {
+    async registration(req: TypedRequestBody, res: Response, next:NextFunction) {
         try {
             const errors = validationResult(req);
             if (!errors.isEmpty()) {
@@ -23,7 +31,7 @@ class UserController {
         }
     }
 
-    async login(req:any, res:any, next:any) {
+    async login(req: TypedRequestBody, res:Response, next:NextFunction) {
         try {
             const { email, password } = req.body;
             const userData = await userService.login(email, password);
@@ -37,7 +45,7 @@ class UserController {
         }
     }
 
-    async logout(req:any, res:any, next:any) {
+    async logout(req: Request, res:Response, next:NextFunction) {
         try {
             const { refreshToken } = req.cookies;
             const token = await userService.logout(refreshToken);
@@ -48,17 +56,17 @@ class UserController {
         }
     }
 
-    async activate(req:any, res:any, next:any) {
+    async activate(req:Request, res:Response, next:NextFunction) {
         try {
             const activationLink = req.params.link;
             await userService.activate(activationLink);
-            return res.redirect(process.env.CLIENT_URL);
+            return res.redirect(process.env.CLIENT_URL as string);
         } catch (error) {
             next(error);
         }
     }
 
-    async refresh(req:any, res:any, next:any) {
+    async refresh(req:Request, res:Response, next:NextFunction) {
         try {
             const { refreshToken } = req.cookies;
             const userData = await userService.refresh(refreshToken);
@@ -67,15 +75,6 @@ class UserController {
                 httpOnly: true,
             });
             return res.json(userData);
-        } catch (error) {
-            next(error);
-        }
-    }
-
-    async getUsers(req:any, res:any, next:any) {
-        try {
-            const users = await userService.getAllUsers();
-            return res.json(users);
         } catch (error) {
             next(error);
         }

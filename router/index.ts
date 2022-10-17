@@ -1,7 +1,7 @@
 import express from "express";
 import userController from "../controllers/user-controller";
+import restaurantsController from "../controllers/restaurants-controller";
 import { body } from "express-validator";
-import authMiddleware from "../middlewares/auth-middleware";
 
 const router = express.Router();
 
@@ -15,6 +15,7 @@ router.post("/login", userController.login);
 router.post("/logout", userController.logout);
 router.get("/activate/:link", userController.activate);
 router.get("/refresh", userController.refresh);
-router.get("/users", authMiddleware, userController.getUsers);
+router.get("/restaurants", restaurantsController.getAllRestaurants);
+router.get("/allRestaurantsDishes/:id", restaurantsController.getAllRestaurantsDishes);
 
 export default router;

@@ -1,9 +1,7 @@
 import express from "express";
-// const getData = require('./getData');
+// const getParsingData = require('./getParsingData');
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import getAllRestaurants from "./endpoints/getAllRestaurants";
-import getAllRestaurantsDishes from "./endpoints/getAllRestaurantsDishes";
 import mongoose from "mongoose";
 require("dotenv").config();
 import router from "./router/index";
@@ -23,17 +21,12 @@ app.use("/api", router);
 app.use(errorMiddleware);
 const start = async () => {
     try {
-        //  connect to MongoDB
         await mongoose
-            .connect(process.env.DB_URL)
+            .connect(process.env.DB_URL as string)
             .then(() => console.log("Connect to DB"));
-        //  connect to server
         app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
     } catch (error) {
         console.log(error);
     }
 };
 start();
-
-app.get("/mainData", getAllRestaurants);
-app.get("/getAllRestaurantsDishes", getAllRestaurantsDishes);

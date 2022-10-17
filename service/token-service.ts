@@ -1,29 +1,26 @@
 import jwt from "jsonwebtoken";
 import tokenModel from "../models/token";
 
+interface IPayload {
+    id: string,
+    isActivated: boolean,
+    email: string
+}
+
 class TokenService {
-    generateTokens(payload:any) {
-        const accessToken = jwt.sign(payload, process.env.JWT_ACCESS_SECRET, {
+    generateTokens(payload:IPayload) {
+        const accessToken = jwt.sign(payload, process.env.JWT_ACCESS_SECRET as string, {
             expiresIn: "15s",
         });
-        const refreshToken = jwt.sign(payload, process.env.JWT_REFRESH_SECRET, {
+        const refreshToken = jwt.sign(payload, process.env.JWT_REFRESH_SECRET as string, {
             expiresIn: "30d",
         });
         return { accessToken, refreshToken };
     }
 
-    validateAccessToken(token:string) {
-        try {
-            const userData = jwt.verify(token, process.env.JWT_ACCESS_SECRET);
-            return userData;
-        } catch (error) {
-            return null;
-        }
-    }
-
     validateRefreshToken(token:string) {
         try {
-            const userData:any = jwt.verify(token, process.env.JWT_REFRESH_SECRET);
+            const userData = jwt.verify(token, process.env.JWT_REFRESH_SECRET as string);
             return userData;
         } catch (error) {
             return null;
